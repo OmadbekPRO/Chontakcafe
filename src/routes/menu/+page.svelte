@@ -1,6 +1,8 @@
 <script>
 	import MenuItemCard from '$lib/components/cart/MenuItemCard.svelte';
 	import CartBar from '$lib/components/cart/CartBar.svelte';
+	import AIAssistant from '$lib/components/cart/AIAssistant.svelte';
+	import { Bot } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 	import { page } from '$app/state';
 
@@ -69,6 +71,7 @@
 	let cart = $state([]);
 	let activeCategory = $state('food');
 	let tableNumber = $derived(page.url.searchParams.get('table') || 'N/A');
+	let isAIAssistantOpen = $state(false);
 
 	// --- DERIVED (React-dagi useMemo o'rniga) ---
 	let filteredItems = $derived(menuItems.filter((item) => item.category === activeCategory));
@@ -101,6 +104,11 @@
 		} else {
 			cart.push({ ...item, quantity: 1 });
 		}
+	}
+
+	/** @param {any[]} items */
+	function addMultipleToCart(items) {
+		items.forEach(item => addToCart(item.id));
 	}
 
 </script>
@@ -138,6 +146,18 @@
 	</main>
 
 	<CartBar {itemCount} {totalPrice} onPlaceOrder={handlePlaceOrder} />
+
+	<!-- AI Assistant FAB -->
+	<button
+		onclick={() => (isAIAssistantOpen = true)}
+		class="fixed bottom-24 right-4 z-40 bg-primary/90 hover:bg-primary text-primary-foreground p-4 rounded-full shadow-lg transition-transform hover:scale-105 active:scale-95 flex items-center justify-center {isAIAssistantOpen ? 'hidden' : ''}"
+		aria-label="Open AI Assistant"
+	>
+		<Bot class="w-6 h-6 animate-pulse" />
+	</button>
+
+	<!-- AI Assistant Component -->
+	<AIAssistant bind:isOpen={isAIAssistantOpen} {menuItems} onAddCombo={addMultipleToCart} />
 </div>
 
 <style>
