@@ -3,8 +3,12 @@
 	import CartBar from '$lib/components/cart/CartBar.svelte';
 	import { fade } from 'svelte/transition';
 	import { page } from '$app/state';
+	import { addNewOrder } from '$lib/stores/order.svelte'; // ← yangi import
 
-	// --- DATA ---
+	/**
+	 * @type {any[]}
+	 */
+
 	const menuItems = [
 		{
 			id: '1',
@@ -55,54 +59,55 @@
 			image: '/assets/cake.png'
 		}
 	];
-
+	/**
+	 * @type {any[] | null | undefined}
+	 */
 	const categories = [
 		{ id: 'food', label: 'Food' },
 		{ id: 'drinks', label: 'Drinks' },
 		{ id: 'desserts', label: 'Desserts' }
 	];
 
-	// --- STATE (Svelte 5 Runes) ---
 	/**
-	 * @type {{ quantity: number; id: string; name: string; description: string; price: number; category: string; image: string; }[]}
+	 * @type {any[]}
 	 */
 	let cart = $state([]);
 	let activeCategory = $state('food');
 	let tableNumber = $derived(page.url.searchParams.get('table') || 'N/A');
 
-	// --- DERIVED (React-dagi useMemo o'rniga) ---
 	let filteredItems = $derived(menuItems.filter((item) => item.category === activeCategory));
 	let itemCount = $derived(cart.reduce((sum, item) => sum + item.quantity, 0));
 	let totalPrice = $derived(cart.reduce((sum, item) => sum + item.price * item.quantity, 0));
 
-	// --- ACTIONS ---
 	function handlePlaceOrder() {
-		// Buyurtmani yuborishda stol raqami endi URL-dan olingan qiymat bo'ladi
+		if (cart.length === 0) return;
+
 		const orderData = {
-			table: tableNumber,
-			items: cart,
-			total: totalPrice
+			tableNumber: Number(tableNumber),
+			items: cart.map((item) => ({
+				name: item.name,
+				quantity: item.quantity
+			})),
+			totalPrice: totalPrice
 		};
 
-		console.log('Yuborilayotgan buyurtma:', orderData);
-		alert(`Stol №${tableNumber} uchun buyurtma qabul qilindi!`);
+		addNewOrder(orderData); // ← markaziy store orqali qo'shildi
+
+		alert(`Stol №${tableNumber} uchun buyurtma qabul qilindi! Oshpaz ko'radi.`);
 		cart = [];
 	}
+
 	/**
-	 * @param {string} itemId
+	 * @param {any} itemId
 	 */
 	function addToCart(itemId) {
 		const item = menuItems.find((i) => i.id === itemId);
 		if (!item) return;
 
 		const existing = cart.find((i) => i.id === itemId);
-		if (existing) {
-			existing.quantity += 1;
-		} else {
-			cart.push({ ...item, quantity: 1 });
-		}
+		if (existing) existing.quantity += 1;
+		else cart.push({ ...item, quantity: 1 });
 	}
-
 </script>
 
 <div class="min-h-screen bg-background pb-32 transition-colors duration-500">

@@ -21,8 +21,8 @@
             </span>
           </div>
           <div>
-            <p class="text-sm opacity-90 font-medium">Total Balance</p>
-            <p class="text-xl font-bold">${(totalPrice / 100).toFixed(2)}</p>
+            <p class="text-sm opacity-90 font-medium">Umumiy hosib</p>
+            <p class="text-xl font-bold">{(totalPrice / 100).toFixed(2)} ming so'm</p>
           </div>
         </div>
 
@@ -30,7 +30,7 @@
           onclick={onPlaceOrder}
           class="bg-background text-foreground hover:bg-muted font-bold px-6 py-3 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-background focus:ring-offset-2 focus:ring-offset-primary"
         >
-          Place Order
+          Buyurtma qilish
         </button>
         
       </div>
