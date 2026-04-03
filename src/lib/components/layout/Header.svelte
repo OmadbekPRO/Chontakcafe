@@ -31,7 +31,7 @@
 						variant="outline" 
 						class="font-mono px-4 py-1.5 border-primary/20 bg-primary/5 shadow-sm"
 					>
-						TABLE: {tableNumber}
+						{tableNumber}-STOL
 					</Badge>
 				</div>
 			{/if}
