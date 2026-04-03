@@ -39,7 +39,7 @@ Do NOT wrap the response in markdown blocks like \`\`\`json. Return pure JSON te
             }
         });
 
-        const safeHistory = history.map(h => ({
+        const safeHistory = history.map((/** @type {{ role: string; text: any; }} */ h) => ({
             role: h.role === 'assistant' ? 'model' : 'user',
             parts: [{ text: h.text || "" }]
         }));
