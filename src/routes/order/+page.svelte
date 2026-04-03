@@ -3,53 +3,13 @@
   import Badge from "$lib/components/cart/Badge.svelte";
   import ChefOrderItem from "$lib/components/cart/ChefOrderItem.svelte";
   import { fade, slide } from "svelte/transition";
+	import { orders, updateOrderStatus } from "$lib/stores/order.svelte";
 
-  // Mock Data
-  let orders = $state([
-    {
-      id: "order-1",
-      tableNumber: 5,
-      status: "in_progress",
-      items: [{ name: "Classic Burger", quantity: 2 }, { name: "Caesar Salad", quantity: 1 }],
-      createdAt: new Date(Date.now() - 8 * 60 * 1000),
-    },
-    {
-      id: "order-2",
-      tableNumber: 3,
-      status: "pending",
-      items: [{ name: "Margherita Pizza", quantity: 1 }, { name: "Chocolate Cake", quantity: 1 }],
-      createdAt: new Date(Date.now() - 2 * 60 * 1000),
-    },
-    {
-      id: "order-3",
-      tableNumber: 8,
-      status: "pending",
-      items: [
-        { name: "Classic Burger", quantity: 1 }, 
-        { name: "Caesar Salad", quantity: 2 },
-        { name: "Fresh Orange Juice", quantity: 2 }
-      ],
-      createdAt: new Date(Date.now() - 1 * 60 * 1000),
-    },
-  ]);
-
-  // Tayyor bo'lmagan buyurtmalarni filtrlash (Derived)
   let activeOrders = $derived(orders.filter(o => o.status !== "ready"));
 
-  function handleStatusChange(orderId, newStatus) {
-    const order = orders.find(o => o.id === orderId);
-    if (!order) return;
-
-    if (newStatus === "ready") {
-      // Silliq yo'qolishi uchun animatsiya bilan o'chiramiz
-      order.status = "ready";
-      setTimeout(() => {
-        orders = orders.filter(o => o.id !== orderId);
-      }, 400);
-    } else {
-      order.status = newStatus;
-    }
-  }
+	function handleStatusChange(orderId, newStatus) {
+		updateOrderStatus(orderId, newStatus);
+	}
 </script>
 
 <main class="container max-w-5xl mx-auto px-6 py-10">
