@@ -7,7 +7,7 @@
 </script>
 
 <div class="min-h-screen flex flex-col">
-	<Header restaurantName="Choyxano" />
+	<Header restaurantName="Choyxona" />
 	
 	<main class="flex-1">
 		{@render children()}
