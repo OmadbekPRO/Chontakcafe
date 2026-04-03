@@ -9,7 +9,7 @@
 <div class="min-h-screen flex flex-col">
 	<Header restaurantName="Choyxona" />
 	
-	<main class="flex-1">
+	<main class="flex-1 bg-background">
 		{@render children()}
 	</main>
 	
